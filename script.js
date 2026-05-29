@@ -1,4 +1,8 @@
 // ===== GLOBAL STATE =====
+const SB_URL = 'https://cmdfungrbzmujxcvdwlt.supabase.co';
+const SB_KEY = 'sb_publishable_Xp76Evvclce4KwgQ59Z-sw_gyRrJ-tv';
+const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+
 let billCounter = 1;
 let savedBills = [];
 let rowCounter = 0;
