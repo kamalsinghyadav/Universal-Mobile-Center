@@ -1,11 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ne">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Universal Mobile - Billing Software</title>
 <link rel="stylesheet" href="style.css">
 </head>
+<body>
+
+<!-- THEME SWITCHER -->
+<div class="theme-switcher" id="themeSwitcher">
+  <span style="font-size:10px;font-weight:bold;color:#555;margin-right:4px;">Theme:</span>
+  <button class="theme-btn" data-theme="pink" style="background:#e91e8c;" title="Pink" onclick="setTheme('pink')">🌸</button>
+  <button class="theme-btn" data-theme="green" style="background:#2e7d32;" title="Green" onclick="setTheme('green')">🌿</button>
+  <button class="theme-btn" data-theme="ocean" style="background:#0077b6;" title="Ocean Blue" onclick="setTheme('ocean')">🌊</button>
+  <button class="theme-btn" data-theme="purple" style="background:#6a0dad;" title="Purple" onclick="setTheme('purple')">💜</button>
+  <button class="theme-btn" data-theme="gold" style="background:#b8860b;" title="Gold" onclick="setTheme('gold')">✨</button>
+  <button class="theme-btn" data-theme="slate" style="background:#37474f;" title="Slate" onclick="setTheme('slate')">🌑</button>
+  <button class="theme-btn" data-theme="crimson" style="background:#b71c1c;" title="Crimson" onclick="setTheme('crimson')">🔴</button>
+</div>
 
 <!-- ===== MENU BAR ===== -->
 <div class="menubar">
@@ -23,20 +36,20 @@
 <!-- ===== TOP TOOLBAR ===== -->
 <div class="toolbar">
   <div class="toolbar-left">
-    <button class="btn btn-green" onclick="newBill()">&#9654; New</button>
-    <button class="btn" onclick="saveBill()">&#128190; Save</button>
-    <button class="btn" onclick="deleteBill()">&#10006; Delete</button>
-    <button class="btn" onclick="printBill()">&#128424; Print</button>
-    <button class="btn btn-blue" onclick="previewBill()">&#128065; Preview</button>
-    <button class="btn" onclick="firstRecord()">|&#9664;</button>
-    <button class="btn" onclick="prevRecord()">&#9664;</button>
-    <button class="btn" onclick="nextRecord()">&#9654;</button>
-    <button class="btn" onclick="lastRecord()">&#9654;|</button>
-    <button class="btn btn-blue" onclick="searchBill()">&#128269; Find</button>
+    <button class="btn btn-green" onclick="newBill()">▶ New</button>
+    <button class="btn" onclick="saveBill()">💾 Save</button>
+    <button class="btn" onclick="deleteBill()">✖ Delete</button>
+    <button class="btn" onclick="printBill()">🖨 Print</button>
+    <button class="btn btn-blue" onclick="previewBill()">👁 Preview</button>
+    <button class="btn" onclick="firstRecord()">|◀</button>
+    <button class="btn" onclick="prevRecord()">◀</button>
+    <button class="btn" onclick="nextRecord()">▶</button>
+    <button class="btn" onclick="lastRecord()">▶|</button>
+    <button class="btn btn-blue" onclick="searchBill()">🔍 Find</button>
   </div>
   <div class="toolbar-right">
-    <button class="btn btn-blue" id="quickSaveBtn" onclick="saveBill()">Quick Save</button>
-    <button class="btn btn-blue" id="quickPrintBtn" onclick="printBill()">Quick Print</button>
+    <button class="btn btn-blue" onclick="saveBill()">Quick Save</button>
+    <button class="btn btn-blue" onclick="printBill()">Quick Print</button>
     &nbsp;|&nbsp;
     <span id="userInfo">User: Admin</span>
     &nbsp;
@@ -53,17 +66,22 @@
   <div class="left-panel">
     <div class="logo-box">
       <div style="text-align:center;">
-        <div style="font-size:20px;">🏭</div>
-        <div style="font-size:9px;color:#800040;font-weight:bold;">HILTEC</div>
+        <div style="font-size:22px;">📱</div>
+        <div style="font-size:8px;font-weight:bold;" class="logo-text">UNIVERSAL<br>MOBILE</div>
       </div>
     </div>
     <div class="company-name">Universal Mobile</div>
     <div class="company-sub">Universal Mobile &amp; Services Center</div>
     <hr style="width:80%;border-color:#ccc;margin:4px 0;">
     <div style="font-size:8px;color:#555;text-align:center;">
-      Deployed By<br>
-      <strong style="color:#800040;">Kamlesh Yadav</strong><br>
+      Developed By<br>
+      <strong class="dev-name">Kamlesh Yadav</strong><br>
       &amp; Uganda Groups
+    </div>
+    <hr style="width:80%;border-color:#ccc;margin:4px 0;">
+    <div style="font-size:7px;text-align:center;color:#777;">
+      🇳🇵 Nepal VAT System<br>
+      IRD Compliant
     </div>
   </div>
 
@@ -72,12 +90,12 @@
 
     <!-- HEADER: Invoice Type + Bill No + Dates -->
     <div class="header-section">
-      <h3>Sales Invoice</h3>
+      <h3>Sales Invoice / बिक्री बिल</h3>
       <label>Type:</label>
-      <select id="invType" style="width:80px;" onchange="updateInvType()">
-        <option>Tax Invoice</option>
+      <select id="invType" style="width:110px;" onchange="updateInvType()">
+        <option>Tax Invoice (VAT)</option>
         <option>Cash Bill</option>
-        <option>Proforma</option>
+        <option>Proforma Invoice</option>
         <option>Quotation</option>
         <option>Credit Note</option>
         <option>Debit Note</option>
@@ -85,22 +103,24 @@
       &nbsp;
       <label>Bill No:</label>
       <input type="text" id="billNo" value="SI-0001" class="field-md highlight-input" readonly>
-      <label>Date:</label>
+      <label>Date (BS):</label>
+      <input type="text" id="billDateBS" class="field-md" placeholder="2081-04-01" oninput="syncDate()">
+      <label>Date (AD):</label>
       <input type="date" id="billDate" class="field-md" onchange="updateDueDate()">
       <label>Due Date:</label>
       <input type="date" id="dueDate" class="field-md">
       <label>Ref No:</label>
       <input type="text" id="refNo" class="field-md" placeholder="Reference #">
-      <label>PO No:</label>
-      <input type="text" id="poNo" class="field-sm" placeholder="PO #">
+      <label>Fiscal Year:</label>
+      <input type="text" id="fiscalYear" class="field-sm" value="2081/82" readonly style="background:#fffacd;">
     </div>
 
     <!-- TABS -->
     <div class="tab-bar">
-      <div class="tab active" id="tab1" onclick="showTab('items')">Items</div>
-      <div class="tab" id="tab2" onclick="showTab('payment')">Payment</div>
+      <div class="tab active" id="tab1" onclick="showTab('items')">Items / सामान</div>
+      <div class="tab" id="tab2" onclick="showTab('payment')">Payment / भुक्तानी</div>
       <div class="tab" id="tab3" onclick="showTab('other')">Other Details</div>
-      <div class="tab" id="tab4" onclick="showTab('remarks')">Remarks</div>
+      <div class="tab" id="tab4" onclick="showTab('remarks')">Remarks / टिप्पणी</div>
     </div>
 
     <!-- TAB CONTENT: ITEMS -->
@@ -109,66 +129,63 @@
       <!-- BILL TO / SHIP TO -->
       <div class="address-section">
         <div class="address-box">
-          <div class="box-title">Bill To</div>
+          <div class="box-title">Bill To / बिल गर्ने</div>
           <div class="form-row">
             <label>Party:</label>
             <select id="partyName" style="width:160px;" onchange="loadParty()">
               <option value="">-- Select Party --</option>
-              <option>ABC Traders</option>
-              <option>XYZ Enterprises</option>
-              <option>Raj &amp; Co</option>
-              <option>National Stores</option>
-              <option>City Mart</option>
-              <option>Global Exports</option>
+              <option>Sharma Traders</option>
+              <option>Kathmandu Enterprises</option>
+              <option>Pokhara Store</option>
+              <option>Thapa &amp; Co</option>
+              <option>Nepal Mobile Hub</option>
+              <option>Biratnagar Exports</option>
             </select>
             <button class="btn" onclick="newParty()" title="Add New Party">+</button>
           </div>
           <div class="form-row">
             <label>Address:</label>
-            <input type="text" id="billAddr1" class="field-xl" placeholder="Address Line 1">
+            <input type="text" id="billAddr1" class="field-xl" placeholder="Street / Tole">
           </div>
           <div class="form-row">
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="text" id="billAddr2" class="field-xl" placeholder="Address Line 2">
+            <input type="text" id="billAddr2" class="field-xl" placeholder="Ward / VDC / Municipality">
           </div>
           <div class="form-row">
             <label>City:</label>
             <input type="text" id="billCity" style="width:80px;" placeholder="City">
-            <label>Pin:</label>
-            <input type="text" id="billPin" style="width:55px;" placeholder="PIN">
+            <label>Zip:</label>
+            <input type="text" id="billPin" style="width:55px;" placeholder="ZIP">
           </div>
           <div class="form-row">
-            <label>State:</label>
-            <select id="billState" style="width:100px;">
-              <option>-- State --</option>
-              <option>Andhra Pradesh</option><option>Assam</option>
-              <option>Bihar</option><option>Chhattisgarh</option>
-              <option>Delhi</option><option>Goa</option>
-              <option>Gujarat</option><option>Haryana</option>
-              <option>Himachal Pradesh</option><option>Jharkhand</option>
-              <option>Karnataka</option><option>Kerala</option>
-              <option>Madhya Pradesh</option><option>Maharashtra</option>
-              <option>Manipur</option><option>Meghalaya</option>
-              <option>Mizoram</option><option>Nagaland</option>
-              <option>Odisha</option><option>Punjab</option>
-              <option>Rajasthan</option><option>Sikkim</option>
-              <option>Tamil Nadu</option><option>Telangana</option>
-              <option>Tripura</option><option>Uttar Pradesh</option>
-              <option>Uttarakhand</option><option>West Bengal</option>
+            <label>Province:</label>
+            <select id="billState" style="width:130px;">
+              <option>-- Province --</option>
+              <option>Koshi Province (No. 1)</option>
+              <option>Madhesh Province (No. 2)</option>
+              <option>Bagmati Province (No. 3)</option>
+              <option>Gandaki Province (No. 4)</option>
+              <option>Lumbini Province (No. 5)</option>
+              <option>Karnali Province (No. 6)</option>
+              <option>Sudurpashchim Province (No. 7)</option>
             </select>
-            <label>GSTIN:</label>
-            <input type="text" id="billGST" style="width:120px;" placeholder="GST Number" maxlength="15">
+          </div>
+          <div class="form-row">
+            <label>PAN No:</label>
+            <input type="text" id="billGST" style="width:100px;" placeholder="PAN Number" maxlength="9">
+            <label>VAT No:</label>
+            <input type="text" id="billVAT" style="width:100px;" placeholder="VAT Reg. No.">
           </div>
           <div class="form-row">
             <label>Mobile:</label>
-            <input type="text" id="billMobile" style="width:90px;" placeholder="Mobile No">
+            <input type="text" id="billMobile" style="width:90px;" placeholder="98XXXXXXXX">
             <label>Email:</label>
             <input type="text" id="billEmail" style="width:130px;" placeholder="Email">
           </div>
         </div>
 
         <div class="address-box">
-          <div class="box-title">Ship To &nbsp; <input type="checkbox" id="sameAsBill" onchange="copySameAddress()"> <label for="sameAsBill" style="font-size:9px;color:white;">Same as Bill To</label></div>
+          <div class="box-title">Ship To / पठाउने ठेगाना &nbsp; <input type="checkbox" id="sameAsBill" onchange="copySameAddress()"> <label for="sameAsBill" style="font-size:9px;color:white;">Same as Bill To</label></div>
           <div class="form-row">
             <label>Name:</label>
             <input type="text" id="shipName" class="field-xl" placeholder="Recipient Name">
@@ -179,36 +196,32 @@
           </div>
           <div class="form-row">
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="text" id="shipAddr2" class="field-xl" placeholder="Address Line 2">
+            <input type="text" id="shipAddr2" class="field-xl" placeholder="Ward / VDC / Municipality">
           </div>
           <div class="form-row">
             <label>City:</label>
             <input type="text" id="shipCity" style="width:80px;" placeholder="City">
-            <label>Pin:</label>
-            <input type="text" id="shipPin" style="width:55px;" placeholder="PIN">
+            <label>Zip:</label>
+            <input type="text" id="shipPin" style="width:55px;" placeholder="ZIP">
           </div>
           <div class="form-row">
-            <label>State:</label>
-            <select id="shipState" style="width:100px;">
-              <option>-- State --</option>
-              <option>Andhra Pradesh</option><option>Assam</option>
-              <option>Bihar</option><option>Chhattisgarh</option>
-              <option>Delhi</option><option>Goa</option>
-              <option>Gujarat</option><option>Haryana</option>
-              <option>Karnataka</option><option>Kerala</option>
-              <option>Madhya Pradesh</option><option>Maharashtra</option>
-              <option>Rajasthan</option><option>Tamil Nadu</option>
-              <option>Telangana</option><option>Uttar Pradesh</option>
-              <option>West Bengal</option>
+            <label>Province:</label>
+            <select id="shipState" style="width:130px;">
+              <option>-- Province --</option>
+              <option>Koshi Province (No. 1)</option>
+              <option>Madhesh Province (No. 2)</option>
+              <option>Bagmati Province (No. 3)</option>
+              <option>Gandaki Province (No. 4)</option>
+              <option>Lumbini Province (No. 5)</option>
+              <option>Karnali Province (No. 6)</option>
+              <option>Sudurpashchim Province (No. 7)</option>
             </select>
-            <label>GSTIN:</label>
-            <input type="text" id="shipGST" style="width:120px;" placeholder="GST Number" maxlength="15">
           </div>
           <div class="form-row">
             <label>Transport:</label>
             <input type="text" id="transport" style="width:100px;" placeholder="Transport">
-            <label>LR No:</label>
-            <input type="text" id="lrNo" style="width:70px;" placeholder="LR No">
+            <label>Waybill:</label>
+            <input type="text" id="lrNo" style="width:70px;" placeholder="Waybill No">
           </div>
           <div class="form-row">
             <label>Vehicle:</label>
@@ -221,7 +234,7 @@
 
       <!-- ITEMS TABLE -->
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-        <span class="section-label">Items / Products</span>
+        <span class="section-label">Items / सामान विवरण</span>
         <div style="display:flex;gap:4px;">
           <button class="btn btn-green" onclick="addRow()">+ Add Row</button>
           <button class="btn btn-red" onclick="deleteLastRow()">- Del Row</button>
@@ -233,55 +246,58 @@
         <table class="items-table" id="itemsTable">
           <thead>
             <tr>
-              <th style="width:30px;">#</th>
-              <th style="width:180px;">Item / Product Name</th>
-              <th style="width:50px;">HSN</th>
+              <th style="width:28px;">#</th>
+              <th style="width:175px;">Item / Product Name</th>
+              <th style="width:55px;">HS Code</th>
               <th style="width:55px;">Qty</th>
-              <th style="width:45px;">Unit</th>
-              <th style="width:70px;">Rate</th>
-              <th style="width:60px;">Disc%</th>
-              <th style="width:70px;">GST%</th>
-              <th style="width:80px;">Amount</th>
-              <th style="width:25px;">Del</th>
+              <th style="width:42px;">Unit</th>
+              <th style="width:70px;">Rate (Rs)</th>
+              <th style="width:55px;">Disc%</th>
+              <th style="width:70px;">Tax Type</th>
+              <th style="width:80px;">Amount (Rs)</th>
+              <th style="width:22px;">Del</th>
             </tr>
           </thead>
-          <tbody id="itemsTbody">
-            <!-- Rows added dynamically -->
-          </tbody>
+          <tbody id="itemsTbody"></tbody>
         </table>
       </div>
 
       <!-- NOTES -->
       <div class="form-row">
         <label>Note/Narration:</label>
-        <textarea class="note-input" id="billNote" placeholder="Enter any narration or notes here..." style="width:400px;"></textarea>
+        <textarea class="note-input" id="billNote" placeholder="Narration / notes..." style="width:380px;"></textarea>
         <label style="margin-left:8px;">Terms:</label>
-        <textarea class="note-input" id="billTerms" placeholder="Terms & Conditions..." style="width:250px;"></textarea>
+        <textarea class="note-input" id="billTerms" placeholder="Terms &amp; Conditions..." style="width:240px;"></textarea>
       </div>
 
-      <!-- TOTALS -->
+      <!-- TOTALS - Nepal VAT Structure -->
       <div class="totals-section">
         <div class="totals-box">
-          <div class="total-row"><label>Sub Total:</label><input type="number" id="subTotal" readonly class="field-md" style="text-align:right;background:#f0f0f0;"></div>
-          <div class="total-row"><label>Discount:</label><input type="number" id="totalDiscount" readonly style="text-align:right;background:#f0f0f0;width:80px;height:16px;border:1px solid #ccc;font-size:10px;padding:1px 3px;"></div>
+          <div class="total-row"><label>Sub Total (Rs):</label><input type="number" id="subTotal" readonly class="field-md" style="text-align:right;background:#f0f0f0;"></div>
+          <div class="total-row"><label>Item Discount:</label><input type="number" id="totalDiscount" readonly style="text-align:right;background:#f0f0f0;width:80px;height:16px;border:1px solid #ccc;font-size:10px;padding:1px 3px;"></div>
           <div class="total-row">
             <label>Add. Discount:</label>
-            <input type="number" id="addDiscPct" style="width:40px;height:16px;border:1px solid #ccc;font-size:10px;padding:1px 3px;" placeholder="%" oninput="recalculate()">%
-            <input type="number" id="addDiscAmt" readonly style="width:60px;height:16px;border:1px solid #ccc;font-size:10px;padding:1px 3px;text-align:right;background:#f0f0f0;">
+            <input type="number" id="addDiscPct" style="width:38px;height:16px;border:1px solid #ccc;font-size:10px;padding:1px 3px;" placeholder="%" oninput="recalculate()">%
+            <input type="number" id="addDiscAmt" readonly style="width:55px;height:16px;border:1px solid #ccc;font-size:10px;padding:1px 3px;text-align:right;background:#f0f0f0;">
           </div>
-          <div class="total-row"><label>Taxable Amt:</label><input type="number" id="taxableAmt" readonly style="text-align:right;background:#f0f0f0;width:80px;height:16px;border:1px solid #ccc;font-size:10px;padding:1px 3px;"></div>
-          <div class="total-row"><label>CGST:</label><input type="number" id="cgst" readonly style="text-align:right;background:#f0f0f0;width:80px;height:16px;border:1px solid #ccc;font-size:10px;padding:1px 3px;"></div>
-          <div class="total-row"><label>SGST:</label><input type="number" id="sgst" readonly style="text-align:right;background:#f0f0f0;width:80px;height:16px;border:1px solid #ccc;font-size:10px;padding:1px 3px;"></div>
-          <div class="total-row"><label>IGST:</label><input type="number" id="igst" readonly style="text-align:right;background:#f0f0f0;width:80px;height:16px;border:1px solid #ccc;font-size:10px;padding:1px 3px;"></div>
+          <div class="total-row"><label>Taxable Amount:</label><input type="number" id="taxableAmt" readonly style="text-align:right;background:#fffde7;width:80px;height:16px;border:1px solid #ccc;font-size:10px;padding:1px 3px;font-weight:bold;"></div>
+          <div class="total-row"><label>VAT @ 13%:</label><input type="number" id="vatAmt" readonly style="text-align:right;background:#f0f0f0;width:80px;height:16px;border:1px solid #ccc;font-size:10px;padding:1px 3px;"></div>
+          <div class="total-row"><label>Excise Duty:</label><input type="number" id="exciseDuty" readonly style="text-align:right;background:#f0f0f0;width:80px;height:16px;border:1px solid #ccc;font-size:10px;padding:1px 3px;"></div>
+          <div class="total-row"><label>Customs Duty:</label><input type="number" id="customsDuty" value="0" style="text-align:right;width:80px;height:16px;border:1px solid #ccc;font-size:10px;padding:1px 3px;" oninput="recalculate()"></div>
           <div class="total-row">
             <label>Round Off:</label>
             <input type="number" id="roundOff" readonly style="text-align:right;background:#f0f0f0;width:80px;height:16px;border:1px solid #ccc;font-size:10px;padding:1px 3px;">
           </div>
-          <div class="total-row" style="background:#ffccdd;font-weight:bold;">
-            <label>GRAND TOTAL:</label>
-            <input type="number" id="grandTotal" readonly style="text-align:right;background:#ffd0dd;width:80px;height:18px;border:2px solid #cc6688;font-size:12px;padding:1px 3px;font-weight:bold;">
+          <div class="total-row grand-row">
+            <label>GRAND TOTAL (रू):</label>
+            <input type="number" id="grandTotal" readonly style="text-align:right;width:80px;height:18px;border:2px solid var(--accent);font-size:12px;padding:1px 3px;font-weight:bold;background:var(--grand-bg);">
           </div>
         </div>
+      </div>
+
+      <!-- Nepal VAT Note -->
+      <div style="font-size:9px;color:#555;text-align:right;margin-top:2px;">
+        * VAT @ 13% as per Nepal IRD regulations | PAN required for transactions above NPR 50,000
       </div>
 
     </div><!-- end tabItems -->
@@ -289,35 +305,55 @@
     <!-- TAB CONTENT: PAYMENT -->
     <div id="tabPayment" style="display:none;">
       <div class="payment-section">
-        <div style="width:100%;margin-bottom:4px;"><span class="section-label">Payment Details</span></div>
+        <div style="width:100%;margin-bottom:4px;"><span class="section-label">Payment Details / भुक्तानी विवरण</span></div>
         <div class="form-row">
           <label>Payment Mode:</label>
-          <select id="payMode" style="width:100px;" onchange="updatePayFields()">
-            <option>Cash</option>
+          <select id="payMode" style="width:110px;" onchange="updatePayFields()">
+            <option>Cash / नगद</option>
             <option>Cheque</option>
-            <option>NEFT/RTGS</option>
-            <option>UPI</option>
+            <option>Bank Transfer</option>
+            <option>eSewa</option>
+            <option>Khalti</option>
+            <option>IME Pay</option>
+            <option>ConnectIPS</option>
             <option>Credit</option>
             <option>Split</option>
           </select>
           &nbsp;
-          <label>Amount Paid:</label>
+          <label>Amount Paid (Rs):</label>
           <input type="number" id="amtPaid" class="field-md" oninput="updateBalance()">
           &nbsp;
           <label>Balance:</label>
           <input type="number" id="balance" readonly class="field-md" style="background:#f0f0f0;">
         </div>
-        <div class="form-row" id="chequeFields">
+        <div class="form-row" id="chequeFields" style="display:none;">
           <label>Cheque No:</label>
           <input type="text" id="chequeNo" class="field-md">
           <label>Bank:</label>
-          <input type="text" id="bankName" class="field-lg">
+          <select id="bankName" style="width:150px;">
+            <option>-- Select Bank --</option>
+            <option>Nepal Rastra Bank</option>
+            <option>Nepal Bank Limited</option>
+            <option>Rastriya Banijya Bank</option>
+            <option>Nabil Bank</option>
+            <option>Standard Chartered Nepal</option>
+            <option>Himalayan Bank</option>
+            <option>Everest Bank</option>
+            <option>Prabhu Bank</option>
+            <option>NIC Asia Bank</option>
+            <option>Siddhartha Bank</option>
+            <option>Laxmi Sunrise Bank</option>
+            <option>Kumari Bank</option>
+            <option>Citizens Bank</option>
+            <option>Sanima Bank</option>
+            <option>Machhapuchchhre Bank</option>
+          </select>
           <label>Date:</label>
           <input type="date" id="chequeDate" class="field-md">
         </div>
-        <div class="form-row">
-          <label>UPI/Txn ID:</label>
-          <input type="text" id="txnId" class="field-xl" placeholder="Transaction ID / UPI Ref">
+        <div class="form-row" id="digitalFields">
+          <label>Txn/Ref ID:</label>
+          <input type="text" id="txnId" class="field-xl" placeholder="Transaction ID / Reference No">
         </div>
         <hr class="divider">
         <div class="form-row">
@@ -325,13 +361,31 @@
           <input type="number" id="prevBal" class="field-md" style="background:#fff0f5;" readonly>
           &nbsp;
           <label><strong>Total Outstanding:</strong></label>
-          <input type="number" id="totalOutstanding" class="field-md" style="background:#ffccdd;font-weight:bold;" readonly>
+          <input type="number" id="totalOutstanding" class="field-md" style="font-weight:bold;" readonly>
         </div>
         <div class="form-row">
-          <label>Credit Limit:</label>
+          <label>Credit Limit (Rs):</label>
           <input type="number" id="creditLimit" class="field-md">
           <label>Credit Days:</label>
           <input type="number" id="creditDays" style="width:50px;">
+        </div>
+        <hr class="divider">
+        <div class="form-row">
+          <label style="font-weight:bold;color:#800;font-size:11px;">🏦 TDS Deduction:</label>
+          <label>TDS %:</label>
+          <select id="tdsPct" style="width:70px;" onchange="recalculate()">
+            <option value="0">None</option>
+            <option value="1.5">1.5%</option>
+            <option value="5">5%</option>
+            <option value="10">10%</option>
+            <option value="15">15%</option>
+          </select>
+          &nbsp;
+          <label>TDS Amount:</label>
+          <input type="number" id="tdsAmt" readonly class="field-md" style="background:#fff0e0;">
+          &nbsp;
+          <label>Net Payable:</label>
+          <input type="number" id="netPayable" readonly class="field-md" style="background:#e0ffe0;font-weight:bold;">
         </div>
       </div>
     </div>
@@ -339,22 +393,24 @@
     <!-- TAB CONTENT: OTHER DETAILS -->
     <div id="tabOther" style="display:none;">
       <div class="payment-section">
-        <div style="width:100%;margin-bottom:4px;"><span class="section-label">Other Details</span></div>
+        <div style="width:100%;margin-bottom:4px;"><span class="section-label">Other Details / अन्य विवरण</span></div>
         <div class="form-row">
           <label>Sales Person:</label>
           <select id="salesPerson" style="width:120px;">
             <option>-- Select --</option>
-            <option>Ramesh Kumar</option>
-            <option>Suresh Reddy</option>
-            <option>Priya Sharma</option>
+            <option>Ramesh Sharma</option>
+            <option>Sita Thapa</option>
+            <option>Bikram KC</option>
           </select>
           &nbsp;
-          <label>Division:</label>
+          <label>Branch/Division:</label>
           <select id="division" style="width:100px;">
-            <option>Main</option>
-            <option>North</option>
-            <option>South</option>
-            <option>Export</option>
+            <option>Head Office</option>
+            <option>Kathmandu</option>
+            <option>Pokhara</option>
+            <option>Biratnagar</option>
+            <option>Nepalgunj</option>
+            <option>Dhangadhi</option>
           </select>
           &nbsp;
           <label>Godown:</label>
@@ -374,34 +430,49 @@
           </select>
           &nbsp;
           <label>Currency:</label>
-          <select id="currency" style="width:60px;">
+          <select id="currency" style="width:70px;" onchange="updateCurrency()">
+            <option>NPR</option>
             <option>INR</option>
             <option>USD</option>
             <option>EUR</option>
+            <option>CNY</option>
           </select>
           &nbsp;
           <label>Exchange Rate:</label>
-          <input type="number" id="exRate" value="1.00" style="width:60px;">
+          <input type="number" id="exRate" value="1.00" style="width:70px;" oninput="recalculate()">
         </div>
         <div class="form-row">
-          <label>E-Way Bill No:</label>
-          <input type="text" id="ewayBill" class="field-lg" placeholder="E-Way Bill Number">
+          <label>IRD Bill No:</label>
+          <input type="text" id="irdBillNo" class="field-lg" placeholder="IRD Registered Bill No">
           &nbsp;
-          <label>E-Invoice IRN:</label>
-          <input type="text" id="irnNo" class="field-xl" placeholder="IRN Number">
+          <label>VAT Invoice No:</label>
+          <input type="text" id="vatInvoiceNo" class="field-lg" placeholder="VAT Invoice Reference">
         </div>
         <div class="form-row">
-          <label>QR Code:</label>
-          <input type="text" id="qrCode" class="field-xl" placeholder="QR Code Data">
+          <label>Excise Duty No:</label>
+          <input type="text" id="exciseNo" class="field-lg" placeholder="Excise License No">
           &nbsp;
-          <button class="btn btn-blue" onclick="genEInvoice()">Generate E-Invoice</button>
+          <button class="btn btn-blue" onclick="genVATInvoice()">🧾 Generate VAT Invoice</button>
         </div>
         <div class="form-row">
-          <label><input type="checkbox" id="reverseCharge"> Reverse Charge Applicable</label>
+          <label><input type="checkbox" id="vatRegistered"> VAT Registered Party</label>
           &nbsp;&nbsp;
-          <label><input type="checkbox" id="export"> Export Bill</label>
+          <label><input type="checkbox" id="importBill"> Import Bill</label>
           &nbsp;&nbsp;
-          <label><input type="checkbox" id="rcm"> RCM</label>
+          <label><input type="checkbox" id="exportBill"> Export Bill</label>
+          &nbsp;&nbsp;
+          <label><input type="checkbox" id="tdsApplicable" onchange="showTDSNote()"> TDS Applicable</label>
+        </div>
+        <div class="form-row">
+          <label>IRD Submission:</label>
+          <select id="irdSubmit" style="width:100px;">
+            <option>Pending</option>
+            <option>Submitted</option>
+            <option>Verified</option>
+          </select>
+          &nbsp;
+          <label>Submission Date:</label>
+          <input type="date" id="irdDate" class="field-md">
         </div>
       </div>
     </div>
@@ -409,20 +480,21 @@
     <!-- TAB CONTENT: REMARKS -->
     <div id="tabRemarks" style="display:none;">
       <div class="payment-section">
-        <div style="width:100%;margin-bottom:4px;"><span class="section-label">Remarks & Notes</span></div>
+        <div style="width:100%;margin-bottom:4px;"><span class="section-label">Remarks &amp; Notes / टिप्पणी</span></div>
         <div class="form-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
           <label>Internal Remarks (not printed):</label>
           <textarea style="width:100%;height:60px;border:1px solid #ccc;font-size:10px;padding:4px;font-family:Arial;" id="internalRemarks" placeholder="Internal remarks..."></textarea>
         </div>
         <div class="form-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
           <label>Print Footer Message:</label>
-          <textarea style="width:100%;height:40px;border:1px solid #ccc;font-size:10px;padding:4px;font-family:Arial;" id="footerMsg" placeholder="Message to print at bottom of invoice...">Thank you for your business!</textarea>
+          <textarea style="width:100%;height:40px;border:1px solid #ccc;font-size:10px;padding:4px;font-family:Arial;" id="footerMsg" placeholder="Message to print at bottom of invoice...">व्यापार गर्नु भएकोमा धन्यवाद! | Thank you for your business!</textarea>
         </div>
         <div class="form-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
-          <label>Terms &amp; Conditions:</label>
-          <textarea style="width:100%;height:60px;border:1px solid #ccc;font-size:10px;padding:4px;font-family:Arial;" id="termsText">1. Goods once sold will not be taken back.
-2. Subject to local jurisdiction.
-3. Payment due as per invoice date.</textarea>
+          <label>Terms &amp; Conditions / सर्त र शर्तहरू:</label>
+          <textarea style="width:100%;height:60px;border:1px solid #ccc;font-size:10px;padding:4px;font-family:Arial;" id="termsText">1. बेचेको सामान फिर्ता लिइने छैन। (Goods once sold will not be taken back.)
+2. स्थानीय क्षेत्राधिकार अधीन। (Subject to local jurisdiction.)
+3. बिल मिति अनुसार भुक्तानी गर्नुहोस्। (Payment due as per invoice date.)
+4. VAT @ 13% Nepal IRD rules applicable.</textarea>
         </div>
       </div>
     </div>
@@ -431,20 +503,20 @@
 
   <!-- RIGHT INFO PANEL -->
   <div class="right-panel">
-    <div class="info-title">&#128202; Invoice Summary</div>
+    <div class="info-title">📊 Invoice Summary</div>
     <div class="info-row"><label>Bill No:</label><span id="r_billNo">SI-0001</span></div>
     <div class="info-row"><label>Date:</label><span id="r_date">-</span></div>
     <div class="info-row"><label>Party:</label><span id="r_party">-</span></div>
     <div class="info-row"><label>Items:</label><span id="r_items">0</span></div>
     <div class="info-row"><label>Qty:</label><span id="r_qty">0</span></div>
     <div class="info-row"><label>Sub Total:</label><span id="r_sub">0.00</span></div>
-    <div class="info-row"><label>Tax:</label><span id="r_tax">0.00</span></div>
-    <div class="info-row"><label>Grand Total:</label><span id="r_grand" style="color:#800040;font-weight:bold;">0.00</span></div>
+    <div class="info-row"><label>VAT (13%):</label><span id="r_tax">0.00</span></div>
+    <div class="info-row"><label>Grand Total:</label><span id="r_grand" style="font-weight:bold;">0.00</span></div>
     <hr class="divider">
-    <div class="info-title">&#128197; Recent Bills</div>
+    <div class="info-title">📅 Recent Bills</div>
     <div id="recentBills" style="font-size:8px;overflow-y:auto;max-height:100px;"></div>
     <hr class="divider">
-    <div class="info-title">&#128200; Day Summary</div>
+    <div class="info-title">📈 Day Summary</div>
     <div class="info-row"><label>Bills Today:</label><span id="dayBills">0</span></div>
     <div class="info-row"><label>Total Sales:</label><span id="daySales">0.00</span></div>
     <div class="info-row"><label>Cash:</label><span id="dayCash">0.00</span></div>
@@ -453,7 +525,8 @@
     <div style="font-size:8px;color:#555;margin-top:4px;text-align:center;">
       <strong>Universal Mobile</strong><br>
       &amp; Services Center<br>
-      <span style="color:#cc6688;">Billing Software v2.0</span>
+      <span class="dev-name" style="font-size:8px;">Billing Software v2.0</span><br>
+      <span style="font-size:7px;">🇳🇵 Nepal VAT Compliant</span>
     </div>
   </div>
 
@@ -461,23 +534,23 @@
 
 <!-- BOTTOM TOOLBAR -->
 <div class="bottom-toolbar">
-  <button class="btn btn-green" onclick="saveBill()">&#128190; Save (F10)</button>
-  <button class="btn btn-blue" onclick="printBill()">&#128424; Print (F5)</button>
-  <button class="btn btn-blue" onclick="previewBill()">&#128065; Preview</button>
-  <button class="btn" onclick="emailBill()">&#128140; Email</button>
-  <button class="btn" onclick="whatsappBill()">&#128242; WhatsApp</button>
-  <button class="btn" onclick="pdfBill()">&#128196; PDF</button>
-  <button class="btn btn-red" onclick="cancelBill()">&#10006; Cancel</button>
-  <button class="btn" onclick="newBill()">&#9654; New Bill (F2)</button>
-  <span class="bottom-status" id="statusMsg">Ready | Universal Billing Software</span>
+  <button class="btn btn-green" onclick="saveBill()">💾 Save (F10)</button>
+  <button class="btn btn-blue" onclick="printBill()">🖨 Print (F5)</button>
+  <button class="btn btn-blue" onclick="previewBill()">👁 Preview</button>
+  <button class="btn" onclick="emailBill()">📧 Email</button>
+  <button class="btn" onclick="whatsappBill()">📲 WhatsApp</button>
+  <button class="btn" onclick="pdfBill()">📄 PDF</button>
+  <button class="btn btn-red" onclick="cancelBill()">✖ Cancel</button>
+  <button class="btn" onclick="newBill()">▶ New Bill (F2)</button>
+  <span class="bottom-status" id="statusMsg">Ready | Universal Mobile Billing Software</span>
 </div>
 
 <!-- STATUS BAR -->
 <div class="statusbar">
   <span id="sb_user">User: Admin</span>
-  <span id="sb_company">Company: Universal Mobile &amp; Services Center</span>
-  <span id="sb_date" id="sbDate"></span>
-  <span id="sb_db">DB: Local</span>
+  <span id="sb_company">Universal Mobile &amp; Services Center</span>
+  <span id="sb_date"></span>
+  <span id="sb_db">DB: Local | Nepal VAT</span>
   <span id="sb_records">Records: 0</span>
 </div>
 
